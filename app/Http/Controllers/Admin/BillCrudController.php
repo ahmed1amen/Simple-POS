@@ -39,6 +39,13 @@ class BillCrudController extends CrudController
         ], false, function ($value) {
             $this->crud->addClause('whereDate', 'created_at', $value);
         });
+        $this->crud->addFilter([
+            'type' => 'text',
+            'name' => 'id',
+            'label' =>  'كود'
+        ], false, function ($value) {
+            $this->crud->addClause('where', 'id', $value);
+        });
 
 
 
