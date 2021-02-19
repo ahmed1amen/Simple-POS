@@ -1,5 +1,13 @@
 @extends(backpack_view('blank'))
+@push('after_styles')
+<style>
 
+    .badge {
+        font-size: 1.5rem;
+    }
+</style>
+
+@endpush
 @section('content')
     <div id="root">
                 <div class="row justify-content-center animated bounceInLeft">
@@ -36,7 +44,7 @@
                         <div class="row">
                             <div class="row col-sm-12 justify-content-center">
 
-                                <div class="form-group " style="direction: rtl;width: 609px;">
+                                <div class="form-group " style="width: 609px;">
 
                                     <label class="form-check-label" for="cusname"> اسم العميل</label>
 
@@ -52,22 +60,23 @@
 
                             <div class="row col-sm-12 justify-content-center mb-3">
 
-                                <label class="form-check-label float-right mr-1 ml-1" v-text="deliverdate"> </label>
 
                                 <div class="input-group col-md-3">
 
 
                                     <div class="input-group-append">
-                                        <span class="input-group-text text-bold text-dark">ايام</span>
+                                        <span class="input-group-text text-bold text-dark">موعد التسليم بعد </span>
+
                                     </div>
 
-                                    <input min="1"  @change="datacalc" v-model="deliverday" step="1" type="number" class="form-control text-bold text-center" >
+                                    <input min="1"  v-on:keyup="datacalc" v-model="deliverday" step="1" type="number" class="form-control text-bold text-center" >
                                     <div class="input-group-prepend">
+                                        <span class="input-group-text text-bold text-dark">ايام</span>
 
-                                        <span class="input-group-text text-bold text-dark">موعد التسليم بعد </span>
                                     </div>
 
                                 </div>
+                                <span class="   badge badge-dark " v-text="deliverdate"> </span>
 
 
 
@@ -103,14 +112,21 @@
 
                                     <tr class='text-center' role='row'
                                         v-for="(invoice_product, k) in invoice_products" :key="k">
-                                        <td v-text="invoice_product.product_no" id='td_barcode'></td>
-                                        <td v-text="invoice_product.product_name" id='td_name'></td>
-                                        <td><input @change="calculateLineTotal(invoice_product)"
+                                        <td><span   v-text="invoice_product.product_no" id='td_barcode' class="text-lg-center badge badge-danger"> </span> </td>
+                                        <td >
+                                            <span  v-text="invoice_product.product_name" id='td_name' class="text-lg-center badge badge-primary"> </span>
+
+                                        </td>
+                                        <td><input  v-on:keyup="calculateLineTotal(invoice_product)"
                                                    v-model="invoice_product.product_qty" type='number'
                                                    class='text-center text-bold' id='td_quantity' value='1' min='0'
                                                    step='1'></td>
-                                        <td v-text="invoice_product.product_price" id='td_price'></td>
-                                        <td v-text="invoice_product.line_total" id='td_total'></td>
+                                        <td>
+                                            <span  v-text="invoice_product.product_price" id='td_price'  class="text-lg-center badge badge-info" ></span>
+                                        </td>
+                                        <td>
+                                            <span  v-text="invoice_product.line_total" id='td_total'  class="text-lg-center badge badge-info" ></span>
+                                        </td>
                                         <td><span class='text-center text-red'></span>
                                             <i style="cursor: pointer;" class="fas fa-plus fa-trash text-red"
                                                @click="deleteRow(k, invoice_product)"></i>
@@ -128,14 +144,17 @@
 
                                     <tr>
                                         <th>الاجمالي:</th>
-                                        <td v-text="invoice_total" id="invoce_totxal"
-                                            class="text-bold text-center"></td>
+                                        <td
+                                            class="text-bold text-center">
+                                            <span  style="font-size: 1.2rem;" v-text="invoice_total" id="invoce_totxal"  class="text-lg-center badge badge-primary">0</span>
+
+                                        </td>
                                     </tr>
 
                                     <tr>
                                         <th>المدفوع:</th>
                                         <td class="">
-                                            <input @change="calculateTotal"
+                                            <input  v-on:keyup="calculateTotal" @change="calculateTotal"
                                                    v-model="invoice_paid" class="text-center text-bold"
                                                    id="invoce_paid" type="number" value="0"
                                                    min="0" step="1">
@@ -154,7 +173,11 @@
 
                                     <tr>
                                         <th>المتبقي:</th>
-                                        <td v-text="invoice_rest" id="invoce_Rest" class="text-bold text-center">0</td>
+                                        <td class="text-bold text-center">
+
+                                            <span  style="    font-size: 1.2rem;"  v-text="invoice_rest" id="invoce_Rest"   class="text-lg-center badge badge-danger">0</span>
+
+                                        </td>
 
                                     </tr>
 
@@ -163,7 +186,7 @@
                                         <th>مدفوع من الزبون:</th>
                                         <td>
                                             <input
-                                                   v-model="cutomer_paid" @change="calchelper"
+                                                   v-model="cutomer_paid" @keyup="calchelper" @change="calchelper"
                                                    class="text-center text-bold"
                                                    type="number" value="0"
                                                    min="0" step="1">
@@ -251,9 +274,8 @@
                     this.deliverdate=date.toLocaleDateString();
                 },
                 completedinvoice(){
-
-
                     this.invoice_paid = this.invoice_total
+                    this.calculateTotal()
                 },
                 resetdata() {
                     this.invoice_products = [];
@@ -263,7 +285,7 @@
                     this.deliverday = 1;
                 },
                 storebill() {
-                    if (this.customrename == '' || this.invoice_products.length == null) {
+                        if (this.customrename == '' || this.invoice_products.length == 0) {
                         swal.fire("خطأ!",
 
                             "<b>تأكد من ادخال</b>" +
