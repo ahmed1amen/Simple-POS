@@ -21,7 +21,7 @@ class CreateBillitemsTable extends Migration
             $table->float('total');
             $table->unsignedBigInteger('bill_id');
             $table->timestamps();
-            $table->foreign('bill_id')->references('id')->on('bills');
+            $table->foreign('bill_id')->references('id')->on('bills')->cascadeOnDelete();
         });
     }
 
