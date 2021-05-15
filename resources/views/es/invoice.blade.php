@@ -246,7 +246,7 @@
 @endpush
 
 @push('after_scripts')
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="/packages/vue/vue.js"></script>
 
     <script>
         var _token = "{{ csrf_token() }}";
