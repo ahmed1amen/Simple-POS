@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Charts;
 
+use App\Http\Controllers\ChartController;
 use App\Models\Bill;
 use App\Models\User;
-use Backpack\CRUD\app\Http\Controllers\ChartController;
 use Carbon\Carbon;
 use ConsoleTVs\Charts\Classes\Chartjs\Chart;
 use Doctrine\DBAL\Tools\Dumper;
